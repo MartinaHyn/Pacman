@@ -6,9 +6,16 @@
 </head>
 
 <body>
+  
   <div id="stage">
     <div id="pacman"></div>
+    <div id="apple"></div>
   </div>
+
+  <!-- <div id="score">
+    Score : 0 bodů
+  </div>
+-->
 </body>
 
 <script>
@@ -32,10 +39,11 @@
   stage.style.height = STAGE_SIZE_Y;
   stage.style.backgroundImage = 'url(img/tile.png)';
   stage.style.position = 'absolute';
+
   
   let pacX = 0;
   let pacY = 0;
-  let mouthOpen = true;
+  let mouthOpen = true;  /* true/false */
   let direction = "33%"; /* 0=right, 33=left, 66=down, 99=up */
 
   const handleKeyDown = (event) => {
@@ -63,34 +71,57 @@
         pacY -= TILE_SIZE;
       }
     }
-// otevirani a zavirani ust pri kazdem kroku
+    if (event.keyCode === 13) { /* enter = new apple */
+       putApple(pacX, pacY);
+    }
+
+    updatePacman(pacX, pacY, direction);
+  };
+
+  const updatePacman = (x, y, dir) => {
+    const pacmanElm = document.querySelector('#pacman');
+    /* posun pacman*/
+    pacmanElm.style.left = x;
+    pacmanElm.style.top = y;
+    /* otevreni/zavreni pusy */
     if (mouthOpen) {
+      pacmanElm.style.backgroundPositionX = "right";
       mouthOpen = false;
     }
     else {
+      pacmanElm.style.backgroundPositionX = "left";
       mouthOpen = true;
     }
-    //update
-    updatePacman(pacX, pacY, mouthOpen, direction);
+    /* nasmerovani pacmana */
+    pacmanElm.style.backgroundPositionY = dir;
+    /* test apple */
+    if ((x === TILE_SIZE * appleX) & (y === TILE_SIZE * appleY)) {
+      putApple(x,y);
+    }
   };
 
-  const updatePacman = (x, y, mouth, dir) => {
-    const pacmanElm = document.querySelector('#pacman');
-    pacmanElm.style.left = x;
-    pacmanElm.style.top = y;
-    if (mouth) {
-      pacmanElm.style.backgroundPositionX = "left";
-    }
-    else {
-      pacmanElm.style.backgroundPositionX = "right";
-    }
-    pacmanElm.style.backgroundPositionY = dir;
+  const randint = (min, max) => {
+    let x = Math.random();
+    return Math.trunc(x * (max + 1 - min)) + min;
+  }
+
+  const putApple = (x, y) => {
+    const apple = document.querySelector('#apple');
+    apple.style.width = TILE_SIZE;
+    apple.style.height = TILE_SIZE;
+    apple.style.backgroundImage = 'url(img/apple.png)';
+    apple.style.position = 'absolute';
+     appleX = randint(0,9);
+     appleY = randint(0,7);
+    apple.style.left = appleX*TILE_SIZE;
+    apple.style.top = appleY*TILE_SIZE;
   };
+
+  let appleX = 0;
+  let appleY = 0;
+  putApple(0,0);
 
   document.body.addEventListener('keydown', handleKeyDown);
-
-  
-
 
 </script>
 

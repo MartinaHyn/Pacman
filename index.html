@@ -28,8 +28,22 @@
   const handleKeyDown = (event) => {
     if(event.keyCode === 39) {
       pacX += TILE_SIZE;
-      console.log(pacX);
+      pacmanElm.style.left = pacX + "px";
     }
+    if(event.keyCode === 37) {
+      pacX -= TILE_SIZE;
+      pacmanElm.style.left = pacX + "px";
+    }
+    if(event.keyCode === 40) {
+      pacY += TILE_SIZE;
+      pacmanElm.style.top = pacY + "px";
+    }
+    if(event.keyCode === 38) {
+      pacY -= TILE_SIZE;
+      pacmanElm.style.top = pacY + "px";
+    }
+      //console.log(pacX);
+
   };
 
   document.body.addEventListener('keydown', handleKeyDown);
